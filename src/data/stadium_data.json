@@ -21,6 +21,14 @@
       "transportation": {
         "train_status": "Trains to NY Penn Station running every 10 minutes. Moderate crowding.",
         "shuttle_buses": "Shuttles to Lot E delayed by 10 minutes due to traffic."
+      },
+      "sustainability": {
+        "waste_management": "Bin capacity at 80% near Gate A. Dispatched team to clear recycling.",
+        "energy_usage": "Optimal. Solar grids generating 45% of current load."
+      },
+      "volunteers": {
+        "deployment": "12 multilingual volunteers stationed at North Concourse.",
+        "alerts": "Need 3 more staff at Gate B to handle Spanish speakers."
       }
     },
     {
@@ -44,6 +52,14 @@
       "transportation": {
         "train_status": "Tren Ligero running normally.",
         "shuttle_buses": "Traffic heavy on Calzada de Tlalpan."
+      },
+      "sustainability": {
+        "waste_management": "All zones clear. Water recycling system running at 100% efficiency.",
+        "energy_usage": "High draw from stadium lights, supplementing with battery storage."
+      },
+      "volunteers": {
+        "deployment": "All posts filled. 45 volunteers on site.",
+        "alerts": "None."
       }
     },
     {
@@ -66,6 +82,14 @@
       "transportation": {
         "train_status": "N/A",
         "shuttle_buses": "Rideshare lot extremely congested. Expect 30 minute delays."
+      },
+      "sustainability": {
+        "waste_management": "Composting bins at main level need swapping.",
+        "energy_usage": "Air conditioning drawing peak load. Initiated slight thermal adjustment to save 10% energy."
+      },
+      "volunteers": {
+        "deployment": "20 volunteers handling rideshare lot flow.",
+        "alerts": "Need medical volunteer at Section 100 immediately."
       }
     }
   ]

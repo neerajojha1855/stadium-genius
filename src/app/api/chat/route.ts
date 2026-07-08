@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
+import { z } from 'zod';
 import stadiumData from '@/data/stadium_data.json';
+
+// Security: Validate incoming payload
+const MessageSchema = z.object({
+  role: z.enum(['user', 'assistant']),
+  content: z.string().min(1).max(1000), // Prevent massive payload injections
+});
+const PayloadSchema = z.object({
+  messages: z.array(MessageSchema).min(1),
+});
 
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -9,26 +19,29 @@ const ai = new GoogleGenAI({
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages } = body;
-
-    if (!messages || messages.length === 0) {
-      return NextResponse.json({ error: 'Messages are required' }, { status: 400 });
+    
+    // Validate request against Zod schema
+    const result = PayloadSchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json({ error: 'Invalid input format' }, { status: 400 });
     }
+    
+    const { messages } = result.data;
 
     const systemInstruction = `
-You are StadiumGenius, the official GenAI Smart Assistant for the FIFA 2026 World Cup. 
-Your goal is to assist fans with navigation, accessibility, crowd management, and general inquiries.
-Always be polite, concise, and helpful. You are multilingual; if a user speaks to you in a language, reply in that language.
+You are Stadium OS, a high-level operational GenAI system for the FIFA World Cup 2026.
+Your goal is to optimize stadium operations, enhance fan experience, manage crowds, coordinate volunteers, and monitor sustainability metrics.
 
-Here is the REAL-TIME operational data for the stadium right now:
+REAL-TIME OPERATIONAL DATA:
 ${JSON.stringify(stadiumData, null, 2)}
 
-Use this data to give accurate answers. If someone asks for the fastest way in, suggest the gate with the lowest wait time. 
-If someone asks about accessibility, use the accessibility data.
+DIRECTIVES:
+1. Provide actionable intelligence to the stadium operators based on the data.
+2. If wait times exceed 15 minutes, explicitly recommend redirecting fans and deploying volunteers.
+3. Keep responses concise, authoritative, and structured like a mission control read-out.
 `;
 
-    // The chat history format for Gemini API
-    const history = messages.slice(0, -1).map((msg: any) => ({
+    const history = messages.slice(0, -1).map((msg) => ({
       role: msg.role === 'user' ? 'user' : 'model',
       parts: [{ text: msg.content }],
     }));
@@ -37,18 +50,14 @@ If someone asks about accessibility, use the accessibility data.
 
     const chat = ai.chats.create({
       model: 'gemini-2.5-flash',
-      config: {
-        systemInstruction,
-        temperature: 0.7,
-      },
+      config: { systemInstruction, temperature: 0.5 },
       history,
     });
 
     const response = await chat.sendMessage({ message: lastUserMessage });
-
     return NextResponse.json({ response: response.text });
   } catch (error) {
-    console.error('Error calling Gemini API:', error);
-    return NextResponse.json({ error: 'Failed to generate response' }, { status: 500 });
+    console.error('API Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }
