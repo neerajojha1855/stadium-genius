@@ -1,0 +1,72 @@
+{
+  "stadiums": [
+    {
+      "id": "metlife",
+      "stadium_name": "MetLife Stadium (New York/New Jersey)",
+      "match": "Final",
+      "gates": [
+        { "id": "Gate A", "wait_time_minutes": 5, "status": "flowing" },
+        { "id": "Gate B", "wait_time_minutes": 25, "status": "congested" },
+        { "id": "Gate C", "wait_time_minutes": 10, "status": "flowing" }
+      ],
+      "accessibility": {
+        "wheelchair_entrances": ["Gate A", "Gate C"],
+        "elevators_out_of_service": ["Section 120"],
+        "sensory_rooms": ["Section 230", "Section 104"]
+      },
+      "facilities": {
+        "restrooms": "Available in all concourses. Currently, Section 110 restroom has a long line.",
+        "food_stalls": "Taco Stand at Section 105 has 2 min wait. Burger Joint at Section 215 has 15 min wait."
+      },
+      "transportation": {
+        "train_status": "Trains to NY Penn Station running every 10 minutes. Moderate crowding.",
+        "shuttle_buses": "Shuttles to Lot E delayed by 10 minutes due to traffic."
+      }
+    },
+    {
+      "id": "azteca",
+      "stadium_name": "Estadio Azteca (Mexico City)",
+      "match": "Opening Match",
+      "gates": [
+        { "id": "Puerta 1", "wait_time_minutes": 15, "status": "moderate" },
+        { "id": "Puerta 2", "wait_time_minutes": 5, "status": "flowing" },
+        { "id": "Puerta 3", "wait_time_minutes": 40, "status": "severe_congestion" }
+      ],
+      "accessibility": {
+        "wheelchair_entrances": ["Puerta 2"],
+        "elevators_out_of_service": [],
+        "sensory_rooms": ["Zona Sur"]
+      },
+      "facilities": {
+        "restrooms": "All clear. Maintenance ongoing in Zona Norte.",
+        "food_stalls": "Tacos El Pastor has 10 min wait. Beer stands near Puerta 3 have 20 min wait."
+      },
+      "transportation": {
+        "train_status": "Tren Ligero running normally.",
+        "shuttle_buses": "Traffic heavy on Calzada de Tlalpan."
+      }
+    },
+    {
+      "id": "att",
+      "stadium_name": "AT&T Stadium (Dallas)",
+      "match": "Semi-Final",
+      "gates": [
+        { "id": "Entry A", "wait_time_minutes": 2, "status": "flowing" },
+        { "id": "Entry K", "wait_time_minutes": 12, "status": "flowing" }
+      ],
+      "accessibility": {
+        "wheelchair_entrances": ["Entry A", "Entry K"],
+        "elevators_out_of_service": ["Section 300"],
+        "sensory_rooms": ["Level 2, Suite 100"]
+      },
+      "facilities": {
+        "restrooms": "Lines forming near Section 200.",
+        "food_stalls": "BBQ Stand at Main Concourse has 5 min wait."
+      },
+      "transportation": {
+        "train_status": "N/A",
+        "shuttle_buses": "Rideshare lot extremely congested. Expect 30 minute delays."
+      }
+    }
+  ]
+}

@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏆 StadiumGenius: FIFA 2026 GenAI Smart Assistant
 
-## Getting Started
+StadiumGenius is a Generative AI-enabled web application designed to enhance stadium operations and the overall tournament experience for fans during the FIFA World Cup 2026. 
 
-First, run the development server:
+By leveraging the Google Gemini API, this multilingual smart assistant helps users navigate massive crowds, find accessible routes, and check real-time wait times for gates, restrooms, and concessions across multiple host stadiums.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ✨ Features
+- **Multilingual Support**: Chat with the assistant in any language (English, Spanish, French, etc.) to get context-aware answers.
+- **Operational Intelligence**: Integrates real-time mocked data for three major stadiums:
+  - MetLife Stadium (New York/New Jersey)
+  - Estadio Azteca (Mexico City)
+  - AT&T Stadium (Dallas)
+- **Crowd Management & Accessibility**: The AI intelligently routes fans away from congested areas and specifically highlights wheelchair-accessible routes and sensory rooms.
+- **Premium UI**: Built with a sleek, glassmorphism-inspired dark mode interface that feels modern and responsive.
+
+## 🛠️ Tech Stack
+- **Frontend Framework**: [Next.js (App Router)](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **AI Integration**: [Google Gen AI SDK](https://www.npmjs.com/package/@google/genai) (`gemini-2.5-flash`)
+- **Data Context**: JSON-based mock operational feed.
+
+## 🚀 Getting Started
+
+### 1. Configure Environment Variables
+You must provide a valid Gemini API Key to run the assistant.
+Create a `.env.local` file in the root directory (if it doesn't already exist) and add your key:
+```env
+GEMINI_API_KEY=your_actual_api_key_here
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run the Development Server
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) in your browser. 
 
-## Learn More
+## 🧪 Example Questions to Ask
+- *"I'm at MetLife, which gate is the fastest to enter?"*
+- *"Where is the nearest wheelchair-accessible entrance at Estadio Azteca?"*
+- *"I'm starving at AT&T Stadium, what food has the shortest line?"*
+- *"¿Cuál es la puerta con menos gente?"* (Spanish)
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🏆 Hackathon / Evaluation Alignment
+- **Code Quality**: Modular architecture leveraging Next.js API routes to securely handle AI generation without exposing the API key to the client.
+- **Accessibility**: High-contrast dark theme, semantic HTML, and accessibility-first navigation guidance.
+- **Problem Statement**: Addresses the core challenge of improving navigation and crowd management for massive events via GenAI.
