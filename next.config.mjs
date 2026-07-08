@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  compress: true, // Efficiency Optimization
+  swcMinify: true, // Faster builds and optimized JS
   async headers() {
     return [
       {

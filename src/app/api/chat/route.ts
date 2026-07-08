@@ -1,3 +1,8 @@
+/**
+ * @file route.ts
+ * @description API endpoint for the Stadium OS GenAI Chat.
+ * Utilizes the Google Gemini 2.5 Flash model for operational intelligence.
+ */
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenAI } from '@google/genai';
 import { z } from 'zod';
@@ -6,7 +11,7 @@ import stadiumData from '@/data/stadium_data.json';
 // Security: Validate incoming payload
 const MessageSchema = z.object({
   role: z.enum(['user', 'assistant']),
-  content: z.string().min(1).max(1000), // Prevent massive payload injections
+  content: z.string().min(1).max(1000), 
 });
 const PayloadSchema = z.object({
   messages: z.array(MessageSchema).min(1),
@@ -16,7 +21,12 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-export async function POST(req: NextRequest) {
+/**
+ * Handles POST requests to the chat API.
+ * @param {NextRequest} req - The incoming request object.
+ * @returns {Promise<NextResponse>} The AI response with Cache-Control headers.
+ */
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const body = await req.json();
     
@@ -30,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     const systemInstruction = `
 You are Stadium OS, a high-level operational GenAI system for the FIFA World Cup 2026.
-Your goal is to optimize stadium operations, enhance fan experience, manage crowds, coordinate volunteers, and monitor sustainability metrics.
+Your goal is to optimize stadium operations, enhance fan experience, manage crowds, coordinate volunteers, monitor sustainability metrics, manage VIP routing, and execute emergency evacuation protocols.
 
 REAL-TIME OPERATIONAL DATA:
 ${JSON.stringify(stadiumData, null, 2)}
@@ -55,7 +65,12 @@ DIRECTIVES:
     });
 
     const response = await chat.sendMessage({ message: lastUserMessage });
-    return NextResponse.json({ response: response.text });
+    
+    // Add Efficiency Headers
+    const headers = new Headers();
+    headers.set('Cache-Control', 's-maxage=10, stale-while-revalidate=59');
+    
+    return NextResponse.json({ response: response.text }, { headers });
   } catch (error) {
     console.error('API Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

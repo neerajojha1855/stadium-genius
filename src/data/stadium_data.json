@@ -29,6 +29,11 @@
       "volunteers": {
         "deployment": "12 multilingual volunteers stationed at North Concourse.",
         "alerts": "Need 3 more staff at Gate B to handle Spanish speakers."
+      },
+      "operations": {
+        "ticketing_throughput": "1,200 scans per minute at main gates.",
+        "vip_routing_status": "VIP Corridor Alpha is clear. High profile motorcade expected in 15 mins.",
+        "emergency_evacuation_readiness": "100% compliant. All blast doors tested and exit routes clear."
       }
     },
     {
@@ -60,6 +65,11 @@
       "volunteers": {
         "deployment": "All posts filled. 45 volunteers on site.",
         "alerts": "None."
+      },
+      "operations": {
+        "ticketing_throughput": "900 scans per minute.",
+        "vip_routing_status": "VIP entrance 2 experiencing minor delays.",
+        "emergency_evacuation_readiness": "Medical response vehicles prepositioned at South exit."
       }
     },
     {
@@ -90,6 +100,11 @@
       "volunteers": {
         "deployment": "20 volunteers handling rideshare lot flow.",
         "alerts": "Need medical volunteer at Section 100 immediately."
+      },
+      "operations": {
+        "ticketing_throughput": "1,500 scans per minute.",
+        "vip_routing_status": "Helipad clear for inbound flights.",
+        "emergency_evacuation_readiness": "All clear."
       }
     }
   ]

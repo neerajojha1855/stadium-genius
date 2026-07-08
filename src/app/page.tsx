@@ -1,18 +1,84 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 
 type Message = {
   role: 'user' | 'assistant';
   content: string;
 };
 
+// --- Modular Components (Efficiency & Code Quality) ---
+const CapacityWidget = memo(function CapacityWidget() {
+  return (
+    <article className="col-span-2 glass-panel rounded-xl p-5 relative overflow-hidden" aria-labelledby="capacity-title">
+      <div className="absolute top-0 right-0 p-4 opacity-20">
+        <span className="material-symbols-outlined text-[#4edea3] scale-150" aria-hidden="true">groups</span>
+      </div>
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 id="capacity-title" className="text-xs text-gray-400 uppercase tracking-widest mb-1 font-semibold">Live Capacity</h3>
+          <p className="text-4xl font-bold text-white">84<span className="text-[#4edea3] text-lg">%</span></p>
+          <p className="text-xs text-gray-400 mt-1 font-semibold">68,000 / 81,000 Fans</p>
+        </div>
+        <div className="relative w-20 h-20" aria-hidden="true">
+          <svg className="w-full h-full transform -rotate-90">
+            <circle className="text-white/5" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="6"></circle>
+            <circle className="text-[#4edea3] drop-shadow-[0_0_8px_rgba(78,222,163,0.6)]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="34.2" strokeWidth="6"></circle>
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="material-symbols-outlined text-[#4edea3] text-[18px]">trending_up</span>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+});
+
+const GateWidget = memo(function GateWidget() {
+  return (
+    <article className="col-span-1 glass-panel rounded-xl p-5" aria-labelledby="gates-title">
+      <h3 id="gates-title" className="text-xs text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2 font-semibold">
+        <span className="material-symbols-outlined text-[16px]" aria-hidden="true">door_front</span> Gates
+      </h3>
+      <ul className="space-y-3" aria-label="Gate wait times list">
+        <li className="flex justify-between items-center">
+          <span className="text-sm font-medium text-white">Gate A</span>
+          <span className="px-2 py-0.5 rounded-full bg-[#4edea3]/10 text-[#4edea3] text-[10px] font-bold" aria-label="Wait time 5 minutes">5m</span>
+        </li>
+        <li className="flex justify-between items-center">
+          <span className="text-sm font-medium text-white">Gate B</span>
+          <span className="px-2 py-0.5 rounded-full bg-[#ffb95f]/10 text-[#ffb95f] text-[10px] font-bold" aria-label="Wait time 22 minutes">22m</span>
+        </li>
+      </ul>
+    </article>
+  );
+});
+
+const IncidentWidget = memo(function IncidentWidget() {
+  return (
+    <article className="col-span-1 glass-panel rounded-xl p-5 border-[#ffb4ab]/20 bg-[#ffb4ab]/5" aria-labelledby="alerts-title">
+      <h3 id="alerts-title" className="text-xs text-[#ffb4ab] uppercase tracking-widest mb-4 flex items-center gap-2 font-semibold">
+        <span className="material-symbols-outlined text-[16px]" aria-hidden="true">warning</span> Alerts
+      </h3>
+      <div className="space-y-1">
+        <p className="font-bold text-white text-sm">2 Minor Alerts</p>
+        <p className="text-gray-300 text-[11px] leading-tight">North Stand Section 12-B: Restroom congestion.</p>
+      </div>
+      <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden" aria-hidden="true">
+        <div className="h-full bg-[#ffb4ab] w-1/3 shadow-[0_0_10px_rgba(255,180,171,0.5)]"></div>
+      </div>
+    </article>
+  );
+});
+
+// --- Main Component ---
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'Stadium OS Online. I am monitoring live feeds across all 3 venues. How can I assist with crowd dispersion today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -27,6 +93,7 @@ export default function Home() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
+    setError(null);
     const newMessages = [...messages, { role: 'user', content: input } as Message];
     setMessages(newMessages);
     setInput('');
@@ -38,14 +105,17 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: newMessages }),
       });
+      
       const data = await response.json();
       if (response.ok) {
         setMessages([...newMessages, { role: 'assistant', content: data.response }]);
       } else {
-        setMessages([...newMessages, { role: 'assistant', content: 'Error communicating with AI.' }]);
+        setError('Error communicating with AI Strategy Core.');
+        setMessages([...newMessages, { role: 'assistant', content: 'System Error: Unable to fetch directive.' }]);
       }
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
+      setError('Network communication failed.');
       setMessages([...newMessages, { role: 'assistant', content: 'Network Error.' }]);
     } finally {
       setIsLoading(false);
@@ -67,61 +137,11 @@ export default function Home() {
       {/* Main Content Area */}
       <main className="h-screen pt-20 pb-24 overflow-y-auto no-scrollbar px-4 space-y-6 flex flex-col max-w-4xl mx-auto">
         
-        {/* Bento Grid Widgets */}
+        {/* Bento Grid Widgets - Rendered using Memoized components */}
         <section className="grid grid-cols-2 gap-4 flex-none" aria-label="Live Stadium Metrics">
-          {/* Widget 1: Capacity */}
-          <article className="col-span-2 glass-panel rounded-xl p-5 relative overflow-hidden" aria-labelledby="capacity-title">
-            <div className="absolute top-0 right-0 p-4 opacity-20">
-              <span className="material-symbols-outlined text-[#4edea3] scale-150" aria-hidden="true">groups</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 id="capacity-title" className="text-xs text-gray-400 uppercase tracking-widest mb-1 font-semibold">Live Capacity</h3>
-                <p className="text-4xl font-bold text-white">84<span className="text-[#4edea3] text-lg">%</span></p>
-                <p className="text-xs text-gray-400 mt-1 font-semibold">68,000 / 81,000 Fans</p>
-              </div>
-              <div className="relative w-20 h-20" aria-hidden="true">
-                <svg className="w-full h-full transform -rotate-90">
-                  <circle className="text-white/5" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="6"></circle>
-                  <circle className="text-[#4edea3] drop-shadow-[0_0_8px_rgba(78,222,163,0.6)]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="34.2" strokeWidth="6"></circle>
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="material-symbols-outlined text-[#4edea3] text-[18px]">trending_up</span>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          {/* Widget 2: Gate Wait Times */}
-          <article className="col-span-1 glass-panel rounded-xl p-5" aria-labelledby="gates-title">
-            <h3 id="gates-title" className="text-xs text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2 font-semibold">
-              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">door_front</span> Gates
-            </h3>
-            <ul className="space-y-3" aria-label="Gate wait times list">
-              <li className="flex justify-between items-center">
-                <span className="text-sm font-medium text-white">Gate A</span>
-                <span className="px-2 py-0.5 rounded-full bg-[#4edea3]/10 text-[#4edea3] text-[10px] font-bold" aria-label="Wait time 5 minutes">5m</span>
-              </li>
-              <li className="flex justify-between items-center">
-                <span className="text-sm font-medium text-white">Gate B</span>
-                <span className="px-2 py-0.5 rounded-full bg-[#ffb95f]/10 text-[#ffb95f] text-[10px] font-bold" aria-label="Wait time 22 minutes">22m</span>
-              </li>
-            </ul>
-          </article>
-
-          {/* Widget 3: Active Incidents */}
-          <article className="col-span-1 glass-panel rounded-xl p-5 border-[#ffb4ab]/20 bg-[#ffb4ab]/5" aria-labelledby="alerts-title">
-            <h3 id="alerts-title" className="text-xs text-[#ffb4ab] uppercase tracking-widest mb-4 flex items-center gap-2 font-semibold">
-              <span className="material-symbols-outlined text-[16px]" aria-hidden="true">warning</span> Alerts
-            </h3>
-            <div className="space-y-1">
-              <p className="font-bold text-white text-sm">2 Minor Alerts</p>
-              <p className="text-gray-300 text-[11px] leading-tight">North Stand Section 12-B: Restroom congestion.</p>
-            </div>
-            <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden" aria-hidden="true">
-              <div className="h-full bg-[#ffb4ab] w-1/3 shadow-[0_0_10px_rgba(255,180,171,0.5)]"></div>
-            </div>
-          </article>
+          <CapacityWidget />
+          <GateWidget />
+          <IncidentWidget />
         </section>
 
         {/* GenAI Chat Interface */}
@@ -140,6 +160,9 @@ export default function Home() {
                 </p>
               </div>
             </div>
+            {error && (
+               <div className="text-xs text-[#ffb4ab] bg-[#ffb4ab]/10 px-2 py-1 rounded" role="alert">{error}</div>
+            )}
           </div>
 
           {/* Chat History */}
