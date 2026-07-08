@@ -9,7 +9,7 @@ type Message = {
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'Welcome to StadiumGenius! 🏆 How can I assist you with your FIFA 2026 experience today?' }
+    { role: 'assistant', content: 'Stadium OS Online. I am monitoring live feeds across all 3 venues. How can I assist with crowd dispersion today?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -38,88 +38,156 @@ export default function Home() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ messages: newMessages }),
       });
-
       const data = await response.json();
-      
       if (response.ok) {
         setMessages([...newMessages, { role: 'assistant', content: data.response }]);
-      } else {
-        setMessages([...newMessages, { role: 'assistant', content: 'Sorry, I encountered an error. Please try again.' }]);
       }
     } catch (error) {
-      setMessages([...newMessages, { role: 'assistant', content: 'Network error. Please check your connection.' }]);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-12 relative overflow-hidden bg-gradient-to-br from-indigo-950 via-purple-900 to-black">
-      {/* Abstract Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-indigo-600 blur-[150px] opacity-30 pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-pink-600 blur-[150px] opacity-20 pointer-events-none"></div>
+    <div className="bg-[#131314] text-[#e5e2e3] select-none overflow-hidden min-h-screen font-sans">
+      <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
       
-      <div className="z-10 w-full max-w-4xl flex flex-col h-[85vh] rounded-3xl overflow-hidden border border-white/10 bg-black/40 backdrop-blur-xl shadow-2xl">
-        {/* Header */}
-        <header className="p-6 border-b border-white/10 bg-black/20 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center font-bold text-lg shadow-lg">
-              SG
+      {/* Top App Bar */}
+      <header className="fixed top-0 w-full z-50 bg-[#131314]/80 backdrop-blur-xl border-b border-white/10 flex justify-between items-center px-6 py-4">
+        <div className="flex items-center gap-3">
+          <span className="material-symbols-outlined text-[#adc6ff]" style={{ fontVariationSettings: "'FILL' 1" }}>stadium</span>
+          <h1 className="text-xl font-bold tracking-tight text-[#adc6ff]">STADIUM OS</h1>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="h-screen pt-20 pb-24 overflow-y-auto no-scrollbar px-4 space-y-6 flex flex-col max-w-4xl mx-auto">
+        
+        {/* Bento Grid Widgets */}
+        <section className="grid grid-cols-2 gap-4 flex-none">
+          {/* Widget 1: Capacity */}
+          <div className="col-span-2 glass-panel rounded-xl p-5 relative overflow-hidden">
+            <div className="absolute top-0 right-0 p-4 opacity-20">
+              <span className="material-symbols-outlined text-[#4edea3] scale-150">groups</span>
             </div>
-            <div>
-              <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">StadiumGenius</h1>
-              <p className="text-xs text-green-400 font-medium">● Live Stadium Feed Active</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-xs text-gray-400 uppercase tracking-widest mb-1 font-semibold">Live Capacity</h3>
+                <p className="text-4xl font-bold text-white">84<span className="text-[#4edea3] text-lg">%</span></p>
+                <p className="text-xs text-gray-400 mt-1 font-semibold">68,000 / 81,000 Fans</p>
+              </div>
+              <div className="relative w-20 h-20">
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle className="text-white/5" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeWidth="6"></circle>
+                  <circle className="text-[#4edea3] drop-shadow-[0_0_8px_rgba(78,222,163,0.6)]" cx="40" cy="40" fill="transparent" r="34" stroke="currentColor" strokeDasharray="213.6" strokeDashoffset="34.2" strokeWidth="6"></circle>
+                </svg>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[#4edea3] text-[18px]">trending_up</span>
+                </div>
+              </div>
             </div>
           </div>
-        </header>
 
-        {/* Chat Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
-          {messages.map((msg, index) => (
-            <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div 
-                className={`max-w-[80%] p-4 rounded-2xl text-sm leading-relaxed ${
+          {/* Widget 2: Gate Wait Times */}
+          <div className="col-span-1 glass-panel rounded-xl p-5">
+            <h3 className="text-xs text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2 font-semibold">
+              <span className="material-symbols-outlined text-[16px]">door_front</span> Gates
+            </h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-white">Gate A</span>
+                <span className="px-2 py-0.5 rounded-full bg-[#4edea3]/10 text-[#4edea3] text-[10px] font-bold">5m</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-white">Gate B</span>
+                <span className="px-2 py-0.5 rounded-full bg-[#ffb95f]/10 text-[#ffb95f] text-[10px] font-bold">22m</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Widget 3: Active Incidents */}
+          <div className="col-span-1 glass-panel rounded-xl p-5 border-[#ffb4ab]/20 bg-[#ffb4ab]/5">
+            <h3 className="text-xs text-[#ffb4ab] uppercase tracking-widest mb-4 flex items-center gap-2 font-semibold">
+              <span className="material-symbols-outlined text-[16px]">warning</span> Alerts
+            </h3>
+            <div className="space-y-1">
+              <p className="font-bold text-white text-sm">2 Minor Alerts</p>
+              <p className="text-gray-400 text-[11px] leading-tight">North Stand Section 12-B: Restroom congestion.</p>
+            </div>
+            <div className="mt-3 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+              <div className="h-full bg-[#ffb4ab] w-1/3 shadow-[0_0_10px_rgba(255,180,171,0.5)]"></div>
+            </div>
+          </div>
+        </section>
+
+        {/* GenAI Chat Interface */}
+        <section className="flex-1 flex flex-col min-h-[500px] glass-panel rounded-3xl p-4 relative mb-24">
+          <div className="flex items-center justify-between mb-4 pb-4 border-b border-white/5">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-[#adc6ff]/20 flex items-center justify-center relative">
+                <span className="material-symbols-outlined text-[#adc6ff]" style={{ fontVariationSettings: "'FILL' 1" }}>smart_toy</span>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#4edea3] rounded-full border-2 border-[#131314]"></div>
+              </div>
+              <div>
+                <h4 className="text-md font-bold text-white">GenAI Strategist</h4>
+                <p className="text-[10px] text-[#4edea3] flex items-center gap-1 uppercase font-bold tracking-tighter">
+                  <span className="w-1.5 h-1.5 bg-[#4edea3] rounded-full animate-pulse"></span> Analyzing Live Stream
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Chat History */}
+          <div className="flex-1 space-y-4 overflow-y-auto no-scrollbar pb-16">
+            {messages.map((msg, index) => (
+              <div key={index} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} message-slide-in`}>
+                <div className={`max-w-[85%] p-4 rounded-2xl text-sm ${
                   msg.role === 'user' 
-                    ? 'bg-blue-600 text-white rounded-br-none shadow-md shadow-blue-900/20' 
-                    : 'bg-white/10 text-gray-100 border border-white/10 rounded-bl-none'
-                }`}
-              >
-                {msg.content}
+                    ? 'rounded-tr-none bg-[#adc6ff]/10 border border-[#adc6ff]/20 text-white' 
+                    : 'rounded-tl-none bg-white/5 border border-white/10 text-gray-200 relative group'
+                }`}>
+                  {msg.content}
+                </div>
               </div>
-            </div>
-          ))}
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-white/10 border border-white/10 p-4 rounded-2xl rounded-bl-none flex items-center space-x-2">
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+            ))}
+            
+            {isLoading && (
+              <div className="flex justify-start opacity-100 transition-opacity duration-300">
+                <div className="bg-white/5 border border-white/10 px-4 py-3 rounded-2xl rounded-tl-none flex gap-1">
+                  <span className="typing-dot"></span>
+                  <span className="typing-dot"></span>
+                  <span className="typing-dot"></span>
+                </div>
               </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
 
-        {/* Input Area */}
-        <div className="p-4 bg-black/30 border-t border-white/10">
-          <form onSubmit={handleSubmit} className="flex space-x-3 relative">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Ask about gates, accessibility, or food..."
-              className="flex-1 bg-white/5 border border-white/10 rounded-full px-6 py-4 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-            />
-            <button
-              type="submit"
-              disabled={isLoading || !input.trim()}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 disabled:opacity-50 text-white rounded-full px-8 py-4 font-semibold text-sm transition-all duration-300 transform active:scale-95 shadow-lg shadow-purple-900/30"
-            >
-              Send
-            </button>
-          </form>
-        </div>
-      </div>
-    </main>
+          {/* Chat Input */}
+          <div className="absolute bottom-4 left-4 right-4">
+            <form onSubmit={handleSubmit} className="relative flex items-center gap-2 glass-panel p-2 rounded-2xl border-white/20 focus-within:border-[#adc6ff]/50 focus-within:shadow-[0_0_20px_rgba(173,198,255,0.15)] transition-all">
+              <button type="button" className="p-2 text-[#adc6ff]">
+                <span className="material-symbols-outlined">auto_awesome</span>
+              </button>
+              <input 
+                type="text" 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                className="bg-transparent border-none focus:ring-0 text-white placeholder-gray-500 text-sm flex-1 outline-none" 
+                placeholder="Ask AI to optimize gates..." 
+              />
+              <button 
+                type="submit"
+                disabled={isLoading || !input.trim()}
+                className="w-10 h-10 rounded-xl bg-[#adc6ff] text-[#002e6a] flex items-center justify-center active:scale-90 transition-transform shadow-[0_4px_12px_rgba(173,198,255,0.3)] disabled:opacity-50"
+              >
+                <span className="material-symbols-outlined">send</span>
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
